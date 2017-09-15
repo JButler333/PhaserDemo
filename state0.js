@@ -1,26 +1,41 @@
-var demo = {}, centerX = 1500 / 2, centerY = 1000 / 2, dylan, speed = 4;
+var demo = {}, centerX = 1500 / 2, centerY = 1000 / 2, dylan, speed = 6;
 demo.state0 = function () {};
 demo.state0.prototype = {
     preload: function(){
         game.load.image('dylan', 'assets/sprites/Dylan.png');  
+        game.load.image('tree', 'assets/backgrounds/treeBG.png'); 
     },
     create: function () {
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         game.stage.backgroundColor = '#80ff80';
         console.log('state0');
         addChangeStateEventListeners();
+        game.world.setBounds(0,0,2000,1000);
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        dylan = game.add.sprite(centerX, centerY, 'dylan');
+        var treeBG = game.add.sprite(0,0,'tree');
+        dylan = game.add.sprite(centerX, centerY+300, 'dylan');
         dylan.anchor.setTo(0.5,0.5);
+        dylan.scale.setTo(0.7,0.7);
+        game.physics.enable(dylan);
+        dylan.body.collideWorldBounds = true;
+        
+        game.camera.follow(dylan);
+        game.camera.deadzone = new Phaser.Rectangle(centerX-300,0,600,1000)
     },
     update: function () {
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
             dylan.x += speed;
+            dylan.scale.setTo(-0.7,0.7);
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
             dylan.x -= speed;
+            dylan.scale.setTo(0.7,0.7);
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP)){
             dylan.y -= speed;
+            if (dylan.y < 650) {
+                dylan.y = 650;
+            }
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
             dylan.y += speed;
