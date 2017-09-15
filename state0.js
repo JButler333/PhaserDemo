@@ -1,25 +1,42 @@
-var demo = {};
-demo.state0 = function(){};
+var demo = {}, centerX = 1500 / 2, centerY = 1000 / 2, dylan, speed = 4;
+demo.state0 = function () {};
 demo.state0.prototype = {
-    preload: function(){},
-    create: function(){
+    preload: function(){
+        game.load.image('dylan', 'assets/sprites/Dylan.png');  
+    },
+    create: function () {
         game.stage.backgroundColor = '#80ff80';
         console.log('state0');
         addChangeStateEventListeners();
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        dylan = game.add.sprite(centerX, centerY, 'dylan');
+        dylan.anchor.setTo(0.5,0.5);
     },
-    update: function(){}
+    update: function () {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
+            dylan.x += speed;
+        }
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+            dylan.x -= speed;
+        }
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP)){
+            dylan.y -= speed;
+        }
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
+            dylan.y += speed;
+        }
+    }
 };  
 
 function changeState(i, stateNum){
     game.state.start('state' + stateNum);
 }
 
-function addKeyCallback(key, fn, args){
+function addKeyCallback(key, fn, args) {
     game.input.keyboard.addKey(key).onDown.add(fn, null, null, args);
 }
 
-function addChangeStateEventListeners(){
+function addChangeStateEventListeners() {
     addKeyCallback(Phaser.Keyboard.ZERO, changeState, 0)
     addKeyCallback(Phaser.Keyboard.ONE, changeState, 1)
     addKeyCallback(Phaser.Keyboard.TWO, changeState, 2)
